@@ -59,25 +59,48 @@ class ProcessCreatorMG5:
     A Model and a Process object must be passed.
     """
 
-    def __init__(self, process: Process, model: Model, root_folder: str, definitions=None):
-        self._process = process
+    def __init__(self, model: Model, definitions=None):
         self._model = model
-        self._root_folder_path = root_folder
         self._definitions = definitions
+        self._mg5_script = None
 
-    def create_script(self,  eft_terms, create_bin_subfolder=False):
-        """Creates the folder for each EFT term that one must simulate"""
+    def add_simulations(self, process, eft_terms,  root_folder: str, create_bin_subfolder=False):
+        """Adds a new set of simulations to the script"""
+        if self._mg5_script is None:
+            self._mg5_script = f"import model {self._model.model_name}\n\n"
+            if self._definitions is not None:
+                self._mg5_script += "\n".join([f"define {definition}" for definition in self._definitions]) + "\n\n"
+
         # transforms each term into a list of terms even if it's the interference with the SM
         eft_terms = [[term] if isinstance(term, str) else term for term in eft_terms]
-        mg5_script = f"import model {self._model.model_name}\n\n"
-        if self._definitions is not None:
-            mg5_script += "\n".join([f"define {definition}" for definition in self._definitions]) + "\n\n"
+
         # builds each command for the creation of the folder
         for term in eft_terms:
             interaction_orders = self._model.build_interaction_orders(term)
             # accounts for all the process
-            for process in self._process:
-                mg5_script += f"{process} {interaction_orders}\n"
+            for proc in process:
+                self._mg5_script += f"{proc} {interaction_orders}\n"
             subfolder = "/bin_1" if create_bin_subfolder else ""
-            mg5_script += f"output {self._root_folder_path}/{'-'.join(term)}{subfolder}\n\n"
-        return mg5_script.strip()
+            self._mg5_script += f"output {root_folder}/{'-'.join(term)}{subfolder}\n\n"
+
+    @property
+    def mg5_script(self):
+        """retunrs the construct script"""
+        return self._mg5_script
+
+    # def get_script(self, process, eft_terms,  root_folder: str, create_bin_subfolder=False):
+    #     """Creates the folder for each EFT term that one must simulate"""
+    #     # transforms each term into a list of terms even if it's the interference with the SM
+    #     eft_terms = [[term] if isinstance(term, str) else term for term in eft_terms]
+    #     mg5_script = f"import model {self._model.model_name}\n\n"
+    #     if self._definitions is not None:
+    #         mg5_script += "\n".join([f"define {definition}" for definition in self._definitions]) + "\n\n"
+    #     # builds each command for the creation of the folder
+    #     for term in eft_terms:
+    #         interaction_orders = self._model.build_interaction_orders(term)
+    #         # accounts for all the process
+    #         for process in process:
+    #             mg5_script += f"{process} {interaction_orders}\n"
+    #         subfolder = "/bin_1" if create_bin_subfolder else ""
+    #         mg5_script += f"output {root_folder}/{'-'.join(term)}{subfolder}\n\n"
+    #     return mg5_script.strip()

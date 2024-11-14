@@ -1,0 +1,4 @@
+import model Semi_Leptonic_SMEFT_dim6_UFO_c1ql_c3ql
+
+generate u u~ > ta+ ta- / z h OC3lq=0 OC1lq^2==1
+output /home/martines/work/MG5_aMC_v3_1_1/PhD/HighPT/atlas-ditau-13TEV/uubar-int-gamma/C1lq/bin_1

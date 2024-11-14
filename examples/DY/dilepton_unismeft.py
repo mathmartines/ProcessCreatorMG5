@@ -18,16 +18,17 @@ if __name__ == "__main__":
                   })
     # DY process
     processes = Process([
-        "p p > e+ e-"
+        "p p > mu+ mu-"
     ])
-    root_folder = "/home/martines/work/MG5_aMC_v3_1_1/PhD/DY/cms-dielectron-13TEV/UniversalSMEFT_d8"
+    root_folder = "/home/martines/work/MG5_aMC_v3_1_1/PhD/DY/cms-dimuon-13TEV/UniversalSMEFT_d8"
 
     eft_terms = [
-        # ["c2JB"], ["c2JW"],
-        # ["c2JB", "c2JB"], ["c2JB", "c2JW"], ["c2JW", "c2JW"]
+        ["c2JB"], ["c2JW"],
+        ["c2JB", "c2JB"], ["c2JB", "c2JW"], ["c2JW", "c2JW"],
         ["c2JB", "c2JWrenorm"], ["c2JB", "cphi1"], ["c2JB", "cBW"],
-        # ["c2JW", "c2JWrenorm"], ["c2JW", "cphi1"], ["c2JW", "cBW"],
-        # ["c1psi2H2D3"], ["c2psi2H2D3"], ["c5psi4H2"], ["c4psi4H2"], ["c7psi4H2"]
+        ["c2JW", "c2JWrenorm"], ["c2JW", "cphi1"], ["c2JW", "cBW"],
+        ["c1psi2H2D3"], ["c2psi2H2D3"], ["c5psi4H2"], ["c4psi4H2"], ["c7psi4H2"],
+        ["c2psi4D2"], ["c3psi4D2"]
     ]
 
     mg5script_builder = ProcessCreatorMG5(process=processes, model=model, root_folder=root_folder)
